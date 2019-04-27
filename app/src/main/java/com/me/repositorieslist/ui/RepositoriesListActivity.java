@@ -5,21 +5,19 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import com.me.repositorieslist.R;
 import com.me.repositorieslist.databinding.ActivityRepoListBinding;
-import com.me.repositorieslist.model.Repo;
-import com.me.repositorieslist.model.RepoSearchResult;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class RepositoriesListActivity extends AppCompatActivity {
 
@@ -29,7 +27,6 @@ public class RepositoriesListActivity extends AppCompatActivity {
     ActivityRepoListBinding binding;
 
     ReposAdapter reposAdapter;
-    List<Repo> fetchedReposList;
 
     SearchRepositoriesViewModel mViewModel;
 
@@ -44,14 +41,18 @@ public class RepositoriesListActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_list);
 
 
-        fetchedReposList = new ArrayList<>();
 
         layoutManager = new LinearLayoutManager(this);
         binding.reposListRv.setLayoutManager(layoutManager);
 
-        reposAdapter = new ReposAdapter();
-        binding.reposListRv.setAdapter(reposAdapter);
+        //Set the Empty text with emoji unicode
+        binding.emptyList.setText(getString(R.string.no_results, "\uD83D\uDE13"));
 
+        //Get the view model
+        mViewModel = ViewModelProviders.of(this, Injection.provideRepositoryViewModelFactory(this))
+                .get(SearchRepositoriesViewModel.class);
+
+        initRecyclerView();
 
         String query = DEFAULT_QUERY;
 
@@ -59,18 +60,7 @@ public class RepositoriesListActivity extends AppCompatActivity {
             query = savedInstanceState.getString(LAST_SEARCH_QUERY, DEFAULT_QUERY);
         }
 
-        mViewModel = ViewModelProviders.of(this,
-                Injection.provideRepositoryViewModelFactory(getApplicationContext()))
-                .get(SearchRepositoriesViewModel.class);
-
-        mViewModel.getReposListLiveData().observe(this, repos -> {
-            if (repos != null) {
-                Log.d(LOG_TAG, "observe on [getReposListLiveData]  Repo List size: " + repos.size());
-                reposAdapter.submitList(repos);
-            }
-        });
-
-        mViewModel.searchRepo(query);
+//        mViewModel.searchRepo(query);
         initSearch(query);
 
     }
@@ -80,6 +70,51 @@ public class RepositoriesListActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putString(LAST_SEARCH_QUERY, mViewModel.lastQueryValue());
     }
+
+    /**
+     * Initializes the RecyclerView that loads the list of Repos
+     */
+    private void initRecyclerView() {
+        //Add dividers between RecyclerView's row items
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        binding.reposListRv.addItemDecoration(dividerItemDecoration);
+
+        //Initializing Adapter
+        initAdapter();
+    }
+
+    /**
+     * Initializes the Adapter of RecyclerView which is {@link ReposAdapter}
+     */
+    private void initAdapter() {
+        reposAdapter = new ReposAdapter();
+        binding.reposListRv.setAdapter(reposAdapter);
+
+        //Subscribing to receive the new PagedList Repos
+        mViewModel.getRepos().observe(this, repos -> {
+            if (repos != null) {
+                Log.d(LOG_TAG, "initAdapter: Repo List size: " + repos.size());
+                showEmptyList(repos.size() == 0);
+                reposAdapter.submitList(repos);
+            }
+        });
+
+        //Subscribing to receive the recent Network Errors if any
+        mViewModel.getNetworkErrors().observe(this, errorMsg -> {
+            Toast.makeText(this, "\uD83D\uDE28 Wooops " + errorMsg, Toast.LENGTH_LONG).show();
+        });
+    }
+
+    private void showEmptyList(boolean show) {
+        if (show) {
+            binding.reposListRv.setVisibility(View.GONE);
+            binding.emptyList.setVisibility(View.VISIBLE);
+        } else {
+            binding.reposListRv.setVisibility(View.VISIBLE);
+            binding.emptyList.setVisibility(View.GONE);
+        }
+    }
+
 
     private void initSearch(String query) {
         binding.searchQueryEt.setText(query);

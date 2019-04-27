@@ -1,6 +1,6 @@
 package com.me.repositorieslist.db;
 
-import android.arch.lifecycle.LiveData;
+import android.arch.paging.DataSource;
 import android.util.Log;
 
 import com.me.repositorieslist.model.Repo;
@@ -22,21 +22,20 @@ public class GithubLocaleCache {
         this.ioExecutor = ioExecutor;
     }
 
-    public void insert(List<Repo> reposList/*, InsertCallback insertCallback*/) {
-//        ioExecutor.execute(new Runnable() {
-//            @Override
-//            public void run() {
-        Log.d(LOG_TAG, "insert: inserting " + reposList.size() + " repos");
-        repoDao.insert(reposList);
-//                insertCallback.insertFinished();
-//            }
-//        });
+    public void insert(List<Repo> reposList, InsertCallback insertCallback) {
+        ioExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(LOG_TAG, "insert: inserting " + reposList.size() + " repos");
+                repoDao.insert(reposList);
+                insertCallback.insertFinished();
+            }
+        });
     }
 
-    public LiveData<List<Repo>> reposByName(String name) {
+    public DataSource.Factory<Integer, Repo> reposByName(String name) {
         return repoDao.reposByName("%" + name.replace(' ', '%') + "%");
     }
-
 
 
     public interface InsertCallback {

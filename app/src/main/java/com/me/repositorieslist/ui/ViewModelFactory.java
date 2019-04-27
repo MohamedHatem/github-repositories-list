@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.me.repositorieslist.data.GithubRepository;
-import com.me.repositorieslist.model.RepoSearchResult;
 
 public class ViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 

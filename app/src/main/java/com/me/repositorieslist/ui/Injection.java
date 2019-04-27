@@ -21,7 +21,7 @@ public class Injection {
     }
 
     public static GithubRepository provideGithubRepository(Context context) {
-        return new GithubRepository(/*provideGithubLocaleCache(context), Executors.newSingleThreadExecutor()*/);
+        return new GithubRepository(provideGithubLocaleCache(context));
     }
 
     public static ViewModelFactory provideRepositoryViewModelFactory(Context context) {

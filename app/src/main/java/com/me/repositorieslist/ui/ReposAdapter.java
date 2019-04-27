@@ -1,7 +1,6 @@
 package com.me.repositorieslist.ui;
 
 import android.arch.paging.PagedListAdapter;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -17,7 +16,6 @@ import com.me.repositorieslist.R;
 import com.me.repositorieslist.databinding.RepoViewItemBinding;
 import com.me.repositorieslist.model.Repo;
 
-import java.util.List;
 
 public class ReposAdapter extends PagedListAdapter<Repo, ReposAdapter.RepoViewHolder> {
 

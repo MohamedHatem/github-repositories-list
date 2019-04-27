@@ -23,9 +23,9 @@
                 android:id="@+id/search_query_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Github Repository"
                 android:imeOptions="actionSearch"
                 android:inputType="textNoSuggestions"
-                android:hint="Github Repository"
                 android:text="Android" />
         </android.support.design.widget.TextInputLayout>
 
@@ -37,5 +37,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/search_query_il" />
+
+        <TextView
+            android:id="@+id/emptyList"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="@dimen/repo_name_size"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 </layout>
