@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="repo"
+            type="com.me.repositorieslist.model.Repo" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/row_item_margin_horizontal"
+        android:layout_marginTop="@dimen/row_item_margin_vertical">
+
+        <TextView
+            android:id="@+id/repo_title_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{repo.fullName}"
+            android:textColor="@color/titleColor"
+            android:textSize="@dimen/repo_name_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Android/ Android-library-title-dummy-text" />
+
+        <TextView
+            android:id="@+id/repo_dec_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:paddingVertical="@dimen/row_item_margin_vertical"
+            android:text="@{repo.description}"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="@dimen/repo_description_size"
+
+            android:visibility="@{repo.description!= null ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/repo_title_tv"
+            tools:text="Android/Android-library-description-dummy-text Android/Android-library-description-dummy-text Android/Android-library-description-dummy-text" />
+
+        <TextView
+            android:id="@+id/stars_count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/row_item_margin_vertical"
+            android:text="@{String.valueOf(repo.stars)}"
+            android:textSize="@dimen/repo_description_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/repo_dec_tv" />
+
+        <TextView
+            android:id="@+id/forks_count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:paddingVertical="@dimen/row_item_margin_vertical"
+            android:text="@{String.valueOf(repo.forks)}"
+            android:textSize="@dimen/repo_description_size"
+            app:layout_constraintEnd_toStartOf="@+id/stars_iv"
+            app:layout_constraintTop_toBottomOf="@+id/repo_dec_tv" />
+
+        <ImageView
+            android:id="@+id/stars_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/row_item_margin_vertical"
+            android:src="@drawable/ic_git_branch"
+            app:layout_constraintEnd_toStartOf="@+id/stars_count_tv"
+            app:layout_constraintTop_toBottomOf="@+id/repo_dec_tv" />
+
+        <ImageView
+            android:id="@+id/shares_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/row_item_margin_vertical"
+            android:src="@drawable/ic_star"
+            app:layout_constraintEnd_toStartOf="@+id/forks_count_tv"
+            app:layout_constraintTop_toBottomOf="@+id/repo_dec_tv" />
+
+        <TextView
+            android:id="@+id/repo_lang_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/row_item_margin_vertical"
+            android:text="@{@string/language(repo.language)}"
+            android:textSize="@dimen/repo_description_size"
+            android:visibility="@{repo.language != null ?  View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/repo_dec_tv" />
+    </android.support.constraint.ConstraintLayout>
+</layout>
