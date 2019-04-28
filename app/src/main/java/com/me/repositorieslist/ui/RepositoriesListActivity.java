@@ -19,6 +19,12 @@ import com.me.repositorieslist.R;
 import com.me.repositorieslist.databinding.ActivityRepoListBinding;
 
 
+/* TODO :
+          1- Why "pagedListAdapter.submitList" is called in "observer on pagedList" callback ?
+          2- To understand when and why the pagedListAdapter.submitList is notified?
+          3- When the pagedList fetches new items, How it notifys the adapter ? does it calls "pagedListAdapter.submitList" ?
+          4- PagedList calls  "pagedListAdapter.submitList" on database-network model ? and doesn't call it on network model ?
+ */
 public class RepositoriesListActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = RepositoriesListActivity.class.getSimpleName();
@@ -39,7 +45,6 @@ public class RepositoriesListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_repo_list);
-
 
 
         layoutManager = new LinearLayoutManager(this);
